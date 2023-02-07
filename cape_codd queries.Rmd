@@ -1,0 +1,278 @@
+---
+title: "Database Analysis"
+author: "Sam Abiodun A"
+date: "2023-02-02"
+output: pdf_document
+---
+
+```{r}
+mean <- c(2,3,4,5,6)
+mean
+```
+
+```{r}
+cancer <- read.table("~/Data Science files/AdescoGym.csv", sep = ",", header = T, skip = 1)
+head(cancer)
+```
+
+```{r}
+auto <- read_xls("~/Data Science files/coldStorage_sub.xls")
+auto
+```
+
+```{r}
+host <- "courses.csrrinzqubik.us-east-1.rds.amazonaws.com"
+connect <- dbConnect(RMySQL::MySQL(),dbname = "tweater",
+host = host,port = 3306, user="student", password = "datacamp")
+```
+```{r}
+tables <- dbListTables(connect)
+tables
+
+User <- dbReadTable(connect,"users")
+User
+```
+```{r}
+host <- "car-simulation-station.c9az8e0qjbgo.us-east-1.rds.amazonaws.com"
+connect <- dbConnect(RMySQL::MySQL(),dbname = "car_simulation_station",
+host = host, port = 3306, user = "datacamp_user", password = "learn tabular data for fun and profit")
+
+
+tables <- dbListTables(connect)
+tables
+
+write.csv(tables, "~/Data Science files/car.csv")
+```
+
+```{r}
+fcancer <- read.csv("https://raw.githubusercontent.com/mGalarnyk/Python_Tutorials/master/Kaggle/BreastCancerWisconsin/data/data.csv", header = T)
+str(fcancer)
+```
+
+
+
+```{r}
+host <- "localhost"
+connect <- dbConnect(RMySQL::MySQL(), dbname ="cape_codd", host = host, port = 3306, user="root", password = "samucolon")
+```
+
+```{r}
+table <- dbListTables(connect)
+table
+```
+
+
+```{r}
+buyer <- dbReadTable(connect, "buyer")
+buyer
+#str(buyer)
+buyer[1:3,1:4]
+colnames(buyer)
+class(buyer[,1:4])
+class(buyer[,1])
+class(buyer[,2])
+class(buyer[,3])
+class(buyer[,4])
+```
+```{r}
+
+retail_order <- dbReadTable(connect, "retail_order")
+retail_order
+str(retail_order)
+colnames(retail_order)
+class(retail_order[,1:6])
+class(retail_order[,1])
+class(retail_order[,2])
+class(retail_order[,3])
+class(retail_order[,4])
+class(retail_order[,5])
+class(retail_order[,6])
+
+```
+```{r}
+hs<-read.csv('https://raw.githubusercontent.com/mGalarnyk/Python_Tutorials/
+master/Kaggle/BreastCancerWisconsin/data/data.csv', header=T)
+
+str(hs)
+
+boxplot(radius_mean~diagnosis, data = hs, main="Boxplot of Price based on HS 
+Status")
+```
+```{r}
+str(hs)
+```
+```{r}
+hs<-read.csv("~/Data Science files/cancer.csv", header=T)
+str(hs)
+boxplot(radius_mean~diagnosis, data = hs, main="Category of cancer cell")
+```
+```{r}
+hs<-read_xls("~/Data Science files/coldStorage_sub.xls")
+hs
+boxplot(Temperature~Season, data = hs, main="Boxplot of Price based on HS 
+Status")
+```
+```{r}
+hdb <- read.csv("~/Data Science files/house.csv")
+str(hdb)
+
+plot(hdb$SQFT,hdb$Price, xlab="SQFT",ylab="Price", main="ScatterPlot of Price and 
+SQFT")
+```
+```{r}
+idb <- read.csv("~/Data Science files/income.data.csv")
+str(idb)
+
+plot(idb$happiness,idb$income, xlab="Happiness",ylab="Income", main="ScatterPlot of Happiness and 
+Income")
+```
+```{r}
+hpdb <- read.csv("~/Data Science files/house.csv")
+hpdb
+
+plot(hpdb$Price, hpdb$Bedrooms, xlab = "Bedrooms", ylab = "Price", main = "Scatterplot of Price and Bedrooms")
+```
+```{r}
+hpdb <- read.csv("~/Data Science files/AdescoGym.csv")
+hpdb
+
+hist(hpdb$Age, xlab="Age", main="Histogram of Age")
+```
+
+```{r}
+library(readxl)
+library(tidyverse)
+dta <- read_excel("~/Data Science files/mbta.xlsx", skip = 1, range = cell_cols(2:60))
+view(dta)
+dta_tidy1 <- dta %>% gather(`2007-01`:`2011-10`, key="year", value="Passengers")
+View(dta_tidy1)
+
+dta_tidy2 <- dta_tidy1 %>% separate(year, into = c("year", "month"))
+view(dta_tidy2)
+```
+
+
+
+```{r}
+dta_tidy3 <- dta_tidy2 %>% spread(mode, Passengers)
+dta_tidy3
+```
+```{r}
+a <- dta_tidy3 %>% .[,c(1:2, 6:8)]
+a
+```
+```{r}
+b <- a %>% gather(`Commuter Rail`:`Light Rail`, key="rail_type", value = "passengers")
+b
+```
+```{r}
+dfa <- as.factor(b$rail_type)
+dfa
+```
+
+
+
+
+
+```{r}
+b$rail_type <- as.factor(b$rail_type)
+b$passengers <- as.numeric(b$passengers)
+b
+```
+
+```{r}
+boxplot(passengers~rail_type, data = b, main = "Rail Transport System")
+```
+
+```{r}
+data("hflights")
+flight <- filter(hflights, Year==2011, Month==2)
+flight
+
+fil <- filter(hflights, Dest %in% c("FLL", "IAH"))
+view(fil)
+```
+```{r}
+fil <- filter(hflights, between(Distance, 224,944))[,11:16]
+fil
+```
+```{r}
+fil <- filter(hflights, Year== 2011, Month== 4)
+fil
+fil <- filter(hflights, UniqueCarrier %in% c("AA", "WN"))
+view(fil)
+```
+```{r}
+arr_1 <- arrange(hflights, Year, Month)
+arr_1
+```
+```{r}
+arr_1 <- arrange(hflights, desc(ArrDelay))
+arr_1
+```
+```{r}
+arr_1 <- arrange(hflights, ArrDelay)
+arr_1
+```
+```{r}
+select1 <- select(hflights, Year, Month, FlightNum, AirTime)[1:4,]
+select1
+
+```
+```{r}
+interest <- select(hflights, Year, Month, AirTime, Distance, Dest, FlightNum)
+interest
+```
+```{r}
+select(hflights, starts_with("Dep"), starts_with("Arr"))
+
+```
+```{r}
+dfg <- select(hflights, contains("Time"))
+dfg
+```
+```{r}
+vars <- c("Year", "Month", "DayofMonth", "DayofMonth", "AirTime")
+s_1 <- select(hflights, one_of(vars))
+head(s_1)[1:6,]
+```
+```{r}
+create <- hflights %>%
+  select(ends_with("Delay"), Distance, AirTime)%>%
+  mutate(time_gain = ArrDelay - DepDelay, speed = Distance / AirTime*60)
+create
+```
+
+
+```{r}
+summary <- summarise(hflights, Delay = sum(DepDelay, na.rm = TRUE))
+summary
+```
+```{r}
+summarise(create, speed_taken = mean(speed, na.rm = T))
+```
+```{r}
+summarise(create, speed_taken = sum(speed, na.rm = T))
+```
+```{r}
+summarise(create, speed_taken = median(speed, na.rm = T))
+```
+```{r}
+summarise(create, speed_taken = range(speed, na.rm = T))
+```
+```{r}
+summarise(create, speed_taken = quantile(speed, na.rm = T))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
